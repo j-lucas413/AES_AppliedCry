@@ -5,7 +5,10 @@
 ##Put you're name here to test that this works'
 #Lucas Johnson
 
-import secrets
+import generate_key
+import column_mix
+import shift_row
+import sub_byte
 
 
 def main():
@@ -22,26 +25,37 @@ def main():
         key = generate_key()
         print("Here is your key: ", key)
     print("Enter the message you want to encrypt: ")
-    message = input()
-    encrypted_message = encrypt_message(message, key)
-    print("Encrypted Message: ", encrypted_message)
+    message = 10101010101010101010xb
 
 
-def generate_key():
-    key = secrets.token_hex(16) #128 bit key generation
-    return key
+
+    for int i in range(amt_block) i < amt_block
+        encrypted_message = encrypt_message(message, key)
+    print("Encrypted Message Block " i ": ", encrypted_message)
+
+
 
 def encrypt_message(message, key):
-    #for i in range(10): #10 rounds of encryption
+    for i in range(10): #10 rounds of encryption
+
         
 
     encrypted_message = "encrypted_" + message  # This is just a dummy implementation
     return encrypted_message
 
-def decrypt_message(encrypted_message, key):
+def sub_byte(s)
 
-    decrypted_message = encrypted_message.replace("encrypted_", "")
-    return decrypted_message
+
+
+def row_shift(s)
+
+
+
+
+def column_mix(s)
+
+
+def xor_key(k, s)
 
 if __name__ == "__main__":
     main()
