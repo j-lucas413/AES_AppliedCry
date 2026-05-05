@@ -1,10 +1,3 @@
-##This is where the main code will be, 
-# it will call the other files and run the program.
-## EXPLODE THE CODE
-
-##Put you're name here to test that this works'
-#Lucas Johnson
-
 import secrets
 
 
@@ -45,10 +38,19 @@ def encrypt_message(message, key):
     encrypted_message = "encrypted_" + message  # This is just a dummy implementation
     return encrypted_message
 
-def decrypt_message(encrypted_message, key):
+def sub_byte(s)
 
-    decrypted_message = encrypted_message.replace("encrypted_", "")
-    return decrypted_message
+
+
+def row_shift(s)
+
+
+
+
+def column_mix(s)
+
+
+def xor_key(k, s)
 
 if __name__ == "__main__":
     main()
