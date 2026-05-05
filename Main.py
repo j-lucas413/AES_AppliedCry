@@ -5,10 +5,7 @@
 ##Put you're name here to test that this works'
 #Lucas Johnson
 
-import generate_key
-import column_mix
-import shift_row
-import sub_byte
+import secrets
 
 
 def main():
@@ -25,37 +22,33 @@ def main():
         key = generate_key()
         print("Here is your key: ", key)
     print("Enter the message you want to encrypt: ")
-    message = 10101010101010101010xb
+    message = input()
+
+    binary_message = ''.join(format(ord(char), '08b') for char in message) #Converts message to decimal and then binary using 08b
+
+    block_size = 16 #16 byte or 128 bit blocks
+    for i in len(binary_message):
+        block_message = [binary_message[i:i+block_size]] #Split binary message into 16 byte blocks
+    for i in range(block_message):
+        encrypted_message = encrypt_message(block_message, key)
+    print("Encrypted Message: ", encrypted_message)
 
 
-
-    for int i in range(amt_block) i < amt_block
-        encrypted_message = encrypt_message(message, key)
-    print("Encrypted Message Block " i ": ", encrypted_message)
-
-
+def generate_key():
+    key = secrets.token_hex(16) #128 bit key generation
+    return key
 
 def encrypt_message(message, key):
-    for i in range(10): #10 rounds of encryption
-
-        
+    #for i in range(10): #10 rounds of encryption
+    
 
     encrypted_message = "encrypted_" + message  # This is just a dummy implementation
     return encrypted_message
 
-def sub_byte(s)
+def decrypt_message(encrypted_message, key):
 
-
-
-def row_shift(s)
-
-
-
-
-def column_mix(s)
-
-
-def xor_key(k, s)
+    decrypted_message = encrypted_message.replace("encrypted_", "")
+    return decrypted_message
 
 if __name__ == "__main__":
     main()
