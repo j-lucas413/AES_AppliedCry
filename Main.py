@@ -41,6 +41,8 @@ def encrypt_message(message, key):
         shift_row(message)
         mix_columns(message)
         xor_key(key, message)
+        i++
+    
     #skip mix_columns in the last round
     sub_byte(message)
     shift_row(message)
