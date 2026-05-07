@@ -1,3 +1,9 @@
+#****************************************
+#
+#  Generate a random key
+#
+#****************************************
+
 def mix_columns(s):
     # This function will perform the MixColumns step of AES encryption
     # It will take a 4x4 matrix (state) as input and return the mixed state

@@ -1,9 +1,11 @@
-import secrets
-import sub_byte
-import mix_columns
-import shift_row
-import key
+from aes_algorithm import aes_encrypt
+from key import generate_key
 
+#****************************************
+#
+#  Main method
+#
+#****************************************
 
 def main():
     print("Welcome to Super Securue AES ENCRYPTION PROGRAM!")
@@ -27,30 +29,8 @@ def main():
     for i in len(binary_message):
         block_message = [binary_message[i:i+block_size]] #Split binary message into 16 byte blocks
     for i in range(block_message):
-        encrypted_message = encrypt_message(block_message, key)
+        encrypted_message = aes_encrypt(block_message, key)
     print("Encrypted Message: ", encrypted_message)
-
-
-def generate_key():
-    key = secrets.token_hex(16) #128 bit key generation
-    return key
-
-def encrypt_message(message, key):
-    for i in range(9): #10 rounds of encryption for AES-128 (save for Last round)
-        sub_byte(message)
-        shift_row(message)
-        mix_columns(message)
-        xor_key(key, message)
-        i++
-    
-    #skip mix_columns in the last round
-    sub_byte(message)
-    shift_row(message)
-    xor_key(key, message)
-
-    encrypted_message = "encrypted_" + message  # This is just a dummy implementation
-    return encrypted_message
-
 
 if __name__ == "__main__":
     main()
