@@ -21,15 +21,21 @@ def main():
         key = generate_key()
         print("Here is your key: ", key)
     print("Enter the message you want to encrypt: ")
+    
     message = input()
-
-    binary_message = ''.join(format(ord(char), '08b') for char in message) #Converts message to decimal and then binary using 08b
+    for char in message:
+        binary_message = ''.join(format(ord(char), '08b')) #Converts message to decimal and then binary using 08b
 
     block_size = 16 #16 byte or 128 bit blocks
-    for i in len(binary_message):
-        block_message = [binary_message[i:i+block_size]] #Split binary message into 16 byte blocks
-    for i in range(block_message):
-        encrypted_message = aes_encrypt(block_message, key)
+    block_message = []
+    for i in range(len(binary_message)):
+        block_message.append(binary_message[i:i+block_size]) #Split binary message into 16 byte blocks
+    
+    encrypted_blocks = []
+    for block in block_message: #Encrypt each block
+        encrypted_blocks.append(encrypt_message(block, key))
+
+    encrypted_message = ''.join(encrypted_blocks)
     print("Encrypted Message: ", encrypted_message)
 
 if __name__ == "__main__":
