@@ -50,7 +50,7 @@ def main():
     # Encrypt
     encrypted_message = cipher.encrypt(padded_message)
 
-    print("Encrypted (hex):", encrypted_message.hex())
+    print("Encrypted message(Test):", encrypted_message.hex())
 
 if __name__ == "__main__":
     main()
