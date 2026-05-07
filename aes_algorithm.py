@@ -10,7 +10,16 @@ from key import xor_key
 #
 #****************************************
 
-def aes_encrypt(message, key):
+def aes_encrypt(message, key, iv = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF):
+    # TODO : Break up messages into blocks...
+    block = message
+
+    # Separate the block into bytes
+    bytes = []
+    for byte in block.encode():
+        byte = format(byte, '08b')
+        bytes.append(byte)
+
     # Perform the first 9 rounds of encryption the same
     for i in range(9):
         sub_byte(message)
