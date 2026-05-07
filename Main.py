@@ -1,5 +1,7 @@
 from aes_algorithm import aes_encrypt
 from key import generate_key
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
 
 #****************************************
 #
@@ -37,6 +39,18 @@ def main():
 
     encrypted_message = ''.join(encrypted_blocks)
     print("Encrypted Message: ", encrypted_message)
+
+    #Python AES for comparision
+    # Create AES cipher in ECB mode
+    cipher = AES.new(key, AES.MODE_ECB)
+
+    # Pad message to multiple of 16 bytes
+    padded_message = pad(message, AES.block_size)
+
+    # Encrypt
+    encrypted_message = cipher.encrypt(padded_message)
+
+    print("Encrypted message(Test):", encrypted_message.hex())
 
 if __name__ == "__main__":
     main()
