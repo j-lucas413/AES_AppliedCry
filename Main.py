@@ -33,7 +33,7 @@ def main():
     
     encrypted_blocks = []
     for block in block_message: #Encrypt each block
-        encrypted_blocks.append(encrypt_message(block, key))
+        encrypted_blocks.append(aes_encrypt(block, key))
 
     encrypted_message = ''.join(encrypted_blocks)
     print("Encrypted Message: ", encrypted_message)
