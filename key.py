@@ -6,9 +6,9 @@ import secrets
 #
 #****************************************
 
+
 def generate_key():
-    key = secrets.token_hex(16) #128 bit key generation
-    return key
+    return secrets.token_bytes(16)
 
 #****************************************
 #
@@ -16,8 +16,9 @@ def generate_key():
 #
 #****************************************
 
-def xor_key(key, message):
-    message = ''.join(format(ord(char), '08b') for char in message) #Converts message to decimal and then binary using 08b
-    key = ''.join(format(ord(char), '08b') for char in key) #
-    xor_result = ''.join(str(int(a) ^ int(b)) for a, b in zip(message, key)) #XOR operation between message and key
-    return xor_result
+def xor_key(state_matrix, key_matrix):
+    # Performs XOR on two 4x4 matrices of integers
+    for r in range(4):
+        for c in range(4):
+            state_matrix[r][c] ^= key_matrix[r][c]
+    return state_matrix
