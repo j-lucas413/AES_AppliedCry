@@ -30,33 +30,6 @@ def sub_byte(state_matrix):
     """Substitutes all bytes in the state matrix using the AES S-Box."""
     for row in range(4):
         for col in range(4):
-            # The byte itself serves as the index for the S-Box
             byte_val = state_matrix[row][col]
             state_matrix[row][col] = S_BOX[byte_val]
     return state_matrix
-
-def print_matrix(matrix):
-    """Helper function to print a 4x4 matrix in clean hexadecimal."""
-    for row in matrix:
-        print(["0x{:02x}".format(byte) for byte in row])
-    print()
-
-def main():
-    s = (0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99)
-    
-    print("Original 1D sequence:")
-    print(["0x{:02x}".format(byte) for byte in s])
-    print()
-    
-    # 1. Transform into 2D Matrix
-    state = transform(s)
-    print("State Matrix (After Transform):")
-    print_matrix(state)
-    
-    # 2. Apply SubBytes
-    state = sub_byte(state)
-    print("State Matrix (After SubBytes):")
-    print_matrix(state)
-
-if __name__ == "__main__":
-    main()
