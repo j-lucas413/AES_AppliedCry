@@ -10,47 +10,41 @@ from Crypto.Util.Padding import pad
 #****************************************
 
 def main():
-    print("Welcome to Super Securue AES ENCRYPTION PROGRAM!")
-    print("Would you like to generate a new key? (yes/no)")
-    choice = input().lower()
+    print("Welcome to Super Secure AES ENCRYPTION PROGRAM!")
+    choice = input("Would you like to generate a new key? (yes/no): ").strip().lower()
+    
     if choice == "yes":
         key = generate_key()
-        print("Generated Key: ", key)
+        print("Generated Key (hex):", key.hex())
     else:
-        print("No key generated.")
-        key = input("Enter the key you want to use for encryption: ")
         print("Not Secure at all...")
         key = generate_key()
-        print("Here is your key: ", key)
-    print("Enter the message you want to encrypt: ")
-    
-    message = input()
-    for char in message:
-        binary_message = ''.join(format(ord(char), '08b')) #Converts message to decimal and then binary using 08b
+        print("Here is your newly generated key anyway (hex):", key.hex())
 
-    block_size = 16 #16 byte or 128 bit blocks
-    block_message = []
-    for i in range(len(binary_message)):
-        block_message.append(binary_message[i:i+block_size]) #Split binary message into 16 byte blocks
+    message = input("Enter the message you want to encrypt: ")
     
+    # 1. Convert string to raw bytes
+    message_bytes = message.encode('utf-8')
+    
+    # 2. Pad to ensure the message is a multiple of 16 bytes
+    pad_len = 16 - (len(message_bytes) % 16)
+    padded_message = message_bytes + bytes([pad_len] * pad_len)
+
+    # 3. Split into 16-byte blocks cleanly
+    blocks = [padded_message[i:i+16] for i in range(0, len(padded_message), 16)]
+    
+    # 4. Encrypt each block using your custom algorithm
     encrypted_blocks = []
-    for block in block_message: #Encrypt each block
+    for block in blocks:
         encrypted_blocks.append(aes_encrypt(block, key))
 
-    encrypted_message = ''.join(encrypted_blocks)
-    print("Encrypted Message: ", encrypted_message)
+    encrypted_message = b''.join(encrypted_blocks)
+    print("\nEncrypted Message (Custom hex):", encrypted_message.hex())
 
-    #Python AES for comparision
-    # Create AES cipher in ECB mode
+    # Python AES for comparison
     cipher = AES.new(key, AES.MODE_ECB)
-
-    # Pad message to multiple of 16 bytes
-    padded_message = pad(message, AES.block_size)
-
-    # Encrypt
-    encrypted_message = cipher.encrypt(padded_message)
-
-    print("Encrypted message(Test):", encrypted_message.hex())
+    test_encrypted_message = cipher.encrypt(padded_message)
+    print("Encrypted message (Test hex):  ", test_encrypted_message.hex())
 
 if __name__ == "__main__":
     main()
