@@ -1,53 +1,71 @@
 #****************************************
 #
-#  Generate a random key
+#  Mix columns - perform a matrix multiplication
+#  in GF(2^8) modulus x^8 + x^4 + x^3 + x + 1
 #
 #****************************************
 
-import copy
+def mix_columns(state_matrix):
+  aes_mix_column_matrix = [
+    [0b10, 0b11, 0b1, 0b1],
+    [0b1, 0b10, 0b11, 0b1],
+    [0b1, 0b1, 0b10, 0b11],
+    [0b11, 0b1, 0b1, 0b10]
+  ]
 
-def galois_mult(a, b):
-    """
-    Multiplication in the Galois field GF(2^8).
-    """
-    p = 0
-    hi_bit_set = 0
-    for i in range(2):
-        if b & 1 == 1: p ^= a
-        hi_bit_set = a & 0x80
-        a <<= 1
-        if hi_bit_set == 0x80: a ^= 0x1b
-        b >>= 1
-    return p % 256
+  result = gf_matrix_mult(aes_mix_column_matrix, state_matrix)
 
-def mixcolumn(column):
-    """
-    Mix one column by by considering it as a polynomial and performing
-    operations in the Galois field (2^8).
-    """
-    # XOR is addition in this field
-    temp = copy.copy(column) # Store temporary column for operations
-    column[0] = galois_mult(temp[0], 2) ^ galois_mult(temp[1], 3) ^ \
-                galois_mult(temp[2], 1) ^ galois_mult(temp[3], 1)
-    column[1] = galois_mult(temp[0], 1) ^ galois_mult(temp[1], 2) ^ \
-                galois_mult(temp[2], 3) ^ galois_mult(temp[3], 1)
-    column[2] = galois_mult(temp[0], 1) ^ galois_mult(temp[1], 1) ^ \
-                galois_mult(temp[2], 2) ^ galois_mult(temp[3], 3)
-    column[3] = galois_mult(temp[0], 3) ^ galois_mult(temp[1], 1) ^ \
-                galois_mult(temp[2], 1) ^ galois_mult(temp[3], 2)
+  return result
 
-def mix_the_columns(state):
-    """
-    Perform a mixing operation which operates on the columns of the states,
-    combining the four bytes in each column.
-    """
-    for i in range(len(state)):
-        # Create column from the corresponding array positions
-        column = copy.copy(state[i])
+#****************************************
+#
+#  Multiply two numbers under GF(2^8)
+#
+#****************************************
 
-        # Mix the extracted column
-        mixcolumn(column)
+def gf_mult(a, b):
+  result = 0
 
-        # Set the new column in the state
-        state[i] = column
-    return state
+  for _ in range(8):
+    # If the current bit is 1, add the result
+    if b & 1:
+        result = result ^ a
+
+    # See if x^8 bit is set in factor
+    high_bit = a & 0x80
+
+    # Multiply the result by x for the next round
+    a = a << 1
+
+    # Take modulus of new factor
+    if high_bit:
+        a = a ^ 0b100011011
+    
+    # We only want 8 bits of it
+    a = a & 0xFF
+
+    # Advance to the next bit of b (corresponds with multiplying by x)
+    b = b >> 1
+
+  return result
+
+#****************************************
+#
+#  Multiply two 4x4 matricies under GF(2^8)
+#
+#****************************************
+
+def gf_matrix_mult(A, B):
+  # 4x4 result matrix
+  result = [[], [], [], []]
+
+  for i in range(4):
+    result[i] = [0, 0, 0, 0]
+    for ii in range(4):
+      value = 0
+      for iii in range(4):
+        value ^= gf_mult(A[i][iii], B[iii][ii])
+
+      result[i][ii] = value
+
+  return result

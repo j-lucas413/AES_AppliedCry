@@ -1,7 +1,22 @@
-from sub_byte import sub_byte, transform
-from mix_columns import mix_the_columns
+from sub_byte import sub_byte
+from mix_columns import mix_columns
 from shift_row import shift_row
-from key import xor_key
+from generate_round_key import generate_round_key
+
+#****************************************
+#
+#  XOR every entry between two 4x4 matricies
+#
+#****************************************
+
+def xor_blocks(matrix_a, matrix_b):
+  result = [[], [], [], []]
+  for i in range(4):
+    result[i] = [0, 0, 0, 0]
+    for ii in range(4):
+      result[i][ii] = matrix_a[i][ii] ^ matrix_b[i][ii]
+
+  return result
 
 #****************************************
 #
@@ -10,30 +25,41 @@ from key import xor_key
 #
 #****************************************
 
-def aes_encrypt(block, key_bytes):
-    # Convert the 16-byte block and key into 4x4 state matrices
-    state = transform(list(block))
-    key_matrix = transform(list(key_bytes))
+def aes_encrypt(block_bytes, key_bytes):
+  # Convert the 16-byte block and key into 4x4 arrays
+  state_matrix = [[], [], [], []]
+  key_matrix = [[], [], [], []]
+  for i in range(4):
+    state_matrix[i] = [0, 0, 0, 0]
+    key_matrix[i] = [0, 0, 0, 0]
+    for ii in range(4):
+      state_matrix[i][ii] = block_bytes[ii * 4 + i]
+      key_matrix[i][ii] = key_bytes[ii * 4 + i]
 
-    # Initial Round
-    state = xor_key(state, key_matrix) 
+  # Generate the full key schedule
+  round_keys = [key_matrix]
+  for rnum in range(1, 11):
+    next_key = generate_round_key(round_keys[-1], rnum)
+    round_keys.append(next_key)
 
-    # 9 Rounds
-    for _ in range(10):
-        state = sub_byte(state)
-        state = shift_row(state)
-        state = mix_the_columns(state)
-        state = xor_key(state, key_matrix)
-    
-    # 10th Round (No MixColumns)
-    state = sub_byte(state)
-    state = shift_row(state)
-    state = xor_key(state, key_matrix)
+  state_matrix = xor_blocks(state_matrix, round_keys[0])
 
-    # Flatten the 4x4 matrix back to a 1D list of bytes
-    encrypted_block = []
-    for r in range(4):
-        for c in range(4):
-            encrypted_block.append(state[r][c])
-            
-    return bytes(encrypted_block)
+  # First 9 rounds
+  for rnum in range(1, 10):
+    state_matrix = sub_byte(state_matrix)
+    state_matrix = shift_row(state_matrix)
+    state_matrix = mix_columns(state_matrix)
+    state_matrix = xor_blocks(state_matrix, round_keys[rnum])
+
+  # In the 10th round mix columns is omitted
+  state_matrix = sub_byte(state_matrix)
+  state_matrix = shift_row(state_matrix)
+  state_matrix = xor_blocks(state_matrix, round_keys[10])
+
+  # Flatten the 4x4 matrix back to a 1D list of bytes
+  ciphertext_bytes = []
+  for i in range(4):
+    for ii in range(4):
+      ciphertext_bytes.append(state_matrix[ii][i])
+          
+  return ciphertext_bytes

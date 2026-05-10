@@ -4,24 +4,35 @@
 #
 #****************************************
 
-def shift_row(s):
-    s[1][0], s[1][1], s[1][2], s[1][3] = s[1][1], s[1][2], s[1][3], s[1][0]
-    s[2][0], s[2][1], s[2][2], s[2][3] = s[2][2], s[2][3], s[2][0], s[2][1]
-    s[3][0], s[3][1], s[3][2], s[3][3] = s[3][3], s[3][0], s[3][1], s[3][2]
-    return s
+def shift_row(state_matrix):
+  shifted = [[], [], [], []]
 
-# For testing...
-def main():
-    s = [
-        [0, 1, 2, 3],
-        [4, 5, 6, 7],
-        [8, 9, 10, 11],
-        [12, 13, 14, 15]
-    ]
-    print(s)
-    shift_row(s)
-    print(s)
+  # First row shifted by zero (no change)
+  shifted[0] = [0, 0, 0, 0]
+  shifted[0][0] = state_matrix[0][0]
+  shifted[0][1] = state_matrix[0][1]
+  shifted[0][2] = state_matrix[0][2]
+  shifted[0][3] = state_matrix[0][3]
 
+  # Second row shifted by one
+  shifted[1] = [0, 0, 0, 0]
+  shifted[1][0] = state_matrix[1][1]
+  shifted[1][1] = state_matrix[1][2]
+  shifted[1][2] = state_matrix[1][3]
+  shifted[1][3] = state_matrix[1][0]
 
-if __name__ == "__main__":
-    main()
+  # Third row shifted by two
+  shifted[2] = [0, 0, 0, 0]
+  shifted[2][0] = state_matrix[2][2]
+  shifted[2][1] = state_matrix[2][3]
+  shifted[2][2] = state_matrix[2][0]
+  shifted[2][3] = state_matrix[2][1]
+
+  # Fourth row shifted by three
+  shifted[3] = [0, 0, 0, 0]
+  shifted[3][0] = state_matrix[3][3]
+  shifted[3][1] = state_matrix[3][0]
+  shifted[3][2] = state_matrix[3][1]
+  shifted[3][3] = state_matrix[3][2]
+  
+  return shifted

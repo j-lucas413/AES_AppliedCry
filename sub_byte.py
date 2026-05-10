@@ -1,3 +1,9 @@
+#****************************************
+#
+#  AES encryption S-Box
+#
+#****************************************
+
 S_BOX = [
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -17,19 +23,14 @@ S_BOX = [
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 ]
 
-def transform(s):
-    """Converts a 1D sequence into a 4x4 state matrix."""
-    return [
-        [s[0], s[1], s[2], s[3]],
-        [s[4], s[5], s[6], s[7]],
-        [s[8], s[9], s[10], s[11]],
-        [s[12], s[13], s[14], s[15]]
-    ]
+#****************************************
+#
+#  Perform substitution
+#
+#****************************************
 
 def sub_byte(state_matrix):
-    """Substitutes all bytes in the state matrix using the AES S-Box."""
-    for row in range(4):
-        for col in range(4):
-            byte_val = state_matrix[row][col]
-            state_matrix[row][col] = S_BOX[byte_val]
-    return state_matrix
+  for i in range(4):
+    for ii in range(4):
+      state_matrix[i][ii] = S_BOX[state_matrix[i][ii]]
+  return state_matrix
