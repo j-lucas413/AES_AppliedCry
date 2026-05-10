@@ -1,6 +1,12 @@
 from aes_algorithm import aes_encrypt
 
-test_block_bytes =[
+#****************************************
+#
+#  Static test case definitions
+#
+#****************************************
+
+test_block_bytes = [
   [65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65 ,65],
   [0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34],
   [0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff]
@@ -18,22 +24,38 @@ test_expected_results = [
   0x69c4e0d86a7b0430d8cdb78070b4c55a
 ]
 
+#****************************************
+#
+#  Run each test
+#
+#****************************************
+
 for testnum in range(len(test_block_bytes)):
+  # Test case performance code...
   block_bytes = test_block_bytes[testnum]
   key_bytes = test_key_bytes[testnum]
   output = aes_encrypt(block_bytes, key_bytes)
   expected = test_expected_results[testnum]
 
-  fout = ""
+  # Reformat output as a consolidated hex-string
+  output_hex = ""
   for i in range(16):
-    fout += f"{output[i]:02x}"
+    output_hex += f"{output[i]:02x}"
+
+  # Reformat expected output into byte-array format
+  expected_bytes = list(expected.to_bytes(16, byteorder="big"))
   
-  print("Test case", testnum)
-  print("plaintext", block_bytes)
-  print("key", key_bytes)
-  print("0x" + fout)
-  print(output)
-  print(hex(expected))
-  expected_bytes = expected.to_bytes(16, byteorder="big")
-  print(list(expected_bytes))
-  print("MATCH:", output == list(expected_bytes))
+  print("----------------------------------")
+  print("\n")
+  print(f"        TEST CASE : {testnum}")
+  print(f"        PLAINTEXT : {block_bytes}")
+  print(f"              KEY : {key_bytes}")
+  print("\n")
+  print(f"       OUTPUT HEX : 0x{output_hex}")
+  print(f"     EXPECTED HEX : {hex(expected)}")
+  print("\n")
+  print(f"     OUTPUT BYTES : {output}")
+  print(f"   EXPECTED BYTES : {expected_bytes}")
+  print("\n")
+  print(f"BYTE ARRAYS MATCH : {output == expected_bytes}")
+  print("\n")

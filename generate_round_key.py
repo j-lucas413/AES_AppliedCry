@@ -3,7 +3,8 @@ from sub_byte import S_BOX
 
 #****************************************
 #
-#  AES round key constants
+#  AES round key constants, statically define instead
+#  of calculating every time
 #
 #****************************************
 
